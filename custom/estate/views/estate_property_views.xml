@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--VIEWS-->
+
+    <!--    SEARCH VIEW-->
+
+    <record id="view_estate_property_search" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="property_name" string="Title"/>
+                <field name="expected_price"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="facades"/>
+
+                <!--filters-->
+
+                <filter string="Low Expected price" name="expected_price"
+                        domain="[('expected_price', '&lt;=', 100000)]"/>
+
+                <filter string="High Expected price" name="expected_price"
+                        domain="[('expected_price', '>=', 200000)]"/>
+
+                <filter string="Garden Available" name="garden"
+                        domain="[('garden', '=', True)]"/>
+
+                <filter string="Garage Available" name="garage"
+                        domain="[('garage', '=', True)]"/>
+
+                <!--Group by-->
+                <filter name="group_estate_postcode" string="Postcode"
+                        context="{'group_by':'postcode'}"/>
+
+                <filter name="group_estate_state" string="State"
+                        context="{'group_by':'state'}"/>
+
+                <filter name="group_estate_sales_person" string="Sales Person"
+                        context="{'group_by':'sales_person'}"/>
+
+                <!--                <filter name="group_estate_customer" string="Customer"-->
+                <!--                        context="{'group_by':'customer'}"/>-->
+
+                <filter name="group_estate_date_availability"
+                        string="Date Availability"
+                        context="{'group_by':'date_availability'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <!--TREE VIEW-->
+
+    <!--TREE VIEW For estate.property-->
+
+    <record id="view_estate_property_tree" model="ir.ui.view">
+        <field name="name">estate.property.tree</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+           <!--tree view color based on state-->
+            <tree decoration-success="state=='sold'"
+                  decoration-bf="1"
+                 decoration-danger="state=='cancelled'" >
+
+                <field name="property_name" string="Estate Name"/>
+                <field name="postcode"/>
+                <field name="date_availability"/>
+                <!--<field name="sales_person"/>-->
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="garage"/>
+                <field name="garden"/>
+                <field name="state"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    TREE VIEW For estate.property.offer-->
+    <record id="view_estate_property_offer_tree" model="ir.ui.view">
+        <field name="name">estate.property.offer.tree</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="price"/>
+                <field name="partner_id"/>
+                <!--<field name="Property_id"/>-->
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--FORM VIEW-->
+
+    <!--FORM View for estate.property-->
+
+    <record id="view_estate_property_form" model="ir.ui.view">
+        <field name="name">estate.property.form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="sold_btn"
+                            type="object"
+                            string="Sold" class="btn-success"/>
+                    <button name="cancel_btn"
+                            type="object"
+                            string="cancel" class="btn-danger"/>
+                    <!--                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>-->
+
+                </header>
+                <sheet>
+                    <group>
+                        <h1>
+                            <field name="property_name"
+                                   placeholder="Property Name"/>
+                        </h1>
+                        <group>
+                        </group>
+                        <group>
+                            <p>
+                                <field name="tag_ids" widget="many2many_tags"
+                                       placeholder="tags"
+                                       options="{'color_field': 'color'}"/>
+                            </p>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <!-- <i class="fa fa-user"></i>-->
+                            <!--  <field name="name" placeholder="Name"/>-->
+                            <!--<field name="name" placeholder="Property type"/>-->
+                            <field name="property_type"/>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                            <field name="best_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <group>
+                                    <field name="description"/>
+                                    <field name="bedrooms"/>
+                                    <field name="living_area"/>
+                                    <field name="facades"/>
+                                    <field name="garage"/>
+                                </group>
+                                <group>
+                                    <field name="garden"/>
+                                    <field name="garden_area"/>
+                                    <field name="garden_orientation"/>
+                                    <field name="active"/>
+                                    <field name="state"/>
+                                    <field name="total_area"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Offers">
+                            <field name="offer_ids">
+                                <tree>
+                                    <field name="price"/>
+                                    <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="dead_line"/>
+                                    <button name="action_accept"
+                                            string="Accept" type="object"
+                                            icon="fa-check"/>
+                                    <button name="action_refuse"
+                                            string="Refuse" type="object"
+                                            icon="fa-times"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Other Info">
+                            <group>
+                                <group>
+                                    <!--<field name="customer"/>-->
+                                    <field name="buyer"/>
+                                    <!--<field name="user_email" />-->
+                                    <field name="sales_person"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           groups="base.group_users"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    FORM View for estate.property.offer-->
+    <record id="view_estate_property_offer_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="partner_id"/>
+                        <field name="validity"/>
+                        <field name="dead_line"/>
+                        <field name="status"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
+    <!--    FORM View for estate.property.tag-->
+    <record id="view_estate_property_tag_form" model="ir.ui.view">
+        <field name="name">estate.property.tag.form</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <h1 style="margin-top: 5%">
+                            <field name="tag_name" placeholder="Tag Name"
+                                   style="border:none"/>
+                        </h1>
+                    </group>
+                    <group>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--ACTIONS-->
+
+    <record id="action_estate_view_tree" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate Real Estate Details
+            </p>
+        </field>
+    </record>
+
+    <record id="action_estate_property_type_view" model="ir.actions.act_window">
+        <field name="name">Property Type</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Property Types
+            </p>
+        </field>
+    </record>
+
+    <record id="action_estate_property_tag_view" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create New Property Tag
+            </p>
+        </field>
+    </record>
+
+    <!--    TOP MENU-->
+    <menuitem id="estate_menu_root" name="Real Estate" sequence="0"/>
+
+
+    <!--    MENU ITEMS-->
+    <menuitem id="estate_advertisement_menu" name="Advertisements"
+              parent="estate_menu_root"/>
+
+    <menuitem id="estate_settings_menu" name="settings"
+              parent="estate_menu_root"/>
+
+
+    <!--    MENU ITEMS WITH ACTION-->
+
+    <menuitem id="estate_property_menu" name="Properties"
+              parent="estate_advertisement_menu"
+              action="action_estate_view_tree"/>
+
+
+    <menuitem id="estate_property_type_menu" name="Property Type"
+              parent="estate_settings_menu"
+              action="action_estate_property_type_view"/>
+
+    <menuitem id="estate_property_tag" name="Property Tag"
+              parent="estate_settings_menu"
+              action="action_estate_property_tag_view"/>
+
+
+</odoo>
+

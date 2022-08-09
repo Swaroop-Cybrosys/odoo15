@@ -1,0 +1,20 @@
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<openerp>-->
+<!--<data noupdate="0">-->
+<!--<record model="ir.module.category"-->
+<!--        id="module_category_estate">-->
+<!--    <field name="name">Real estate </field>-->
+<!--&lt;!&ndash;    <field name="description">The Real Estate Applilcation</field>&ndash;&gt;-->
+<!--    <field name="sequence">10</field>-->
+<!--</record>-->
+
+<!--<record id="real_estate_admin_group" model="res.groups">-->
+<!--    <field name="name">Real Estate Admin Group </field>-->
+<!--&lt;!&ndash;    <field name="comment">Real Estate Permission Group.</field>&ndash;&gt;-->
+<!--    <field name="category_id"-->
+<!--           ref="module_category_estate"/>-->
+<!--</record>-->
+
+
+<!--</data>-->
+<!--</openerp>-->

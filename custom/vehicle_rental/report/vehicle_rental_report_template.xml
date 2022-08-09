@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_vehicle_rental">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <link rel="stylesheet"
+                          href="/vehicle_rental/static/css/style.css"/>
+                    <div class="page">
+                        <div class="oe-structure">
+                            <div class="text-center">
+                                <h3>
+                                    <b>Vehicle Rental Report</b>
+                                </h3>
+                                <!--                                <hr/>-->
+                            </div>
+                            <br/>
+                            <div class="text-coloured">
+                                <div>
+                                    <b>
+                                        Vehicle :
+                                    </b>
+                                    <span t-esc="selected_vehicle"/>
+                                </div>
+                                <br/>
+                                <div>
+                                    <b>
+                                        Start Date :
+                                    </b>
+                                    <span t-esc="date_start"/>
+                                </div>
+                                <br/>
+                                <div>
+                                    <b>
+                                        End Date :
+                                    </b>
+                                    <span t-esc="date_end"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <table class="content-table">
+                                <thead>
+                                    <tr>
+                                        <th name="sl_no">
+                                            <span>
+                                                Sl_no
+                                            </span>
+                                        </th>
+                                        <th name="vehicle_id">
+                                            <span>
+                                                Vehicle
+                                            </span>
+                                        </th>
+                                        <th name="period">
+                                            <span>
+                                                Period
+                                            </span>
+                                        </th>
+                                        <th name="customer">
+                                            <span>
+                                                Customer
+                                            </span>
+                                        </th>
+                                        <th name="state">
+                                            <span>
+                                                State
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="i" t-value="1"/>
+                                    <t t-foreach="results" t-as="rec">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="i"/>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec['vehicle_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec['period']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec['partner_name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="rec['state']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

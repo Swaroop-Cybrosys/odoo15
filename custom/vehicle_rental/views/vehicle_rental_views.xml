@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SEARCH VIEW-->
+    <record id="view_vehicle_rental_search" model="ir.ui.view">
+        <field name="name">vehicle.rental.search</field>
+        <field name="model">vehicle.rental</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="brand"/>
+                <field name="state"/>
+
+                <!--filters-->
+                <filter string="Available" name="available" domain="[('state', '=', 'available')]"/>
+                <filter string="Not Available" name="not_available" domain="[('state', '=', 'not_available')]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <!--Group by-->
+                <filter name="group_vehicle_brand" string="Brand" context="{'group_by':'brand'}"/>
+                <filter name="group_vehicle_model_year" string="Model year" context="{'group_by':'model_year'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree view for vehicle.rental model  -->
+    <record model="ir.ui.view" id="vehicle_rental.tree">
+        <field name="name">vehicle_rental tree</field>
+        <field name="model">vehicle.rental</field>
+        <field name="arch" type="xml">
+            <tree sample ="1">
+                <field name="name"/>
+                <field name="vehicle_id" string="Vehicle"/>
+                <field name="brand"/>
+                <field name="state" widget="badge" decoration-info="state == 'available'" decoration-danger="state == 'not_available'" decoration-success="state == 'sold'"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="model_year" optional="hide"/>
+                <field name="rent_amount" optional="hide" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Kanban for vehicle.rental model-->
+    <record id='vehicle_rental_view_kanban' model='ir.ui.view'>
+        <field name="name">vehicle_rental.kanban</field>
+        <field name="model">vehicle.rental</field>
+        <field name="arch" type="xml">
+            <kanban sample ="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Brand :
+                                            <field name="brand"/>
+                                        </li>
+                                        <li>
+                                            Rent Price :
+                                            <field name="rent_amount"/>
+                                        </li>
+                                        <li class="pull-right">
+                                            <field widget="badge" name="state" decoration-info="state == 'available'" decoration-danger="state == 'not_available'" decoration-success="state == 'sold'"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--    FORM View for vehicle.rental model-->
+    <record id="view_rent_vehicle_form" model="ir.ui.view">
+        <field name="name">vehicle_rental form</field>
+        <field name="model">vehicle.rental</field>
+        <field name="arch" type="xml">
+            <form>
+                <!--STATUSBAR-->
+                <header>
+                    <field name="state"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_rent_request" icon="fa-usd">
+                            <field name="request_count" string="Rent Requests" widget ="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <!--<field name="vehicle" />-->
+                            <field name="vehicle_id" domain="[('state_id', '=', 3 )]"/>
+                            <field name="registration_date"/>
+                            <field name="brand"/>
+                            <field name="name"/>
+                            <field name="model_year"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="rent_amount" widget="Monetary" options="{'currency_field': 'currency_id'}" readonly="False" />
+                            <field name="state" widget="statusbar" statusbar_visible="available,not_available,sold" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rent Request">
+                            <field name="request_ids">
+                                <tree create="false" delete="false">
+                                    <field name="partner_id"/>
+                                    <field name="vehicle_id"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Rent Charges">
+                            <field name="amount_ids">
+                                <tree editable="bottom">
+                                    <field name="time" />
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount"/>
+                                    <!--<field name="amount" sum="total" string="Total"/>-->
+                                </tree>
+                                <form>
+                                    <field name="time" />
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount" />
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_users"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- actions opening views on models -->
+    <!--    RENT VEHICLE ACTION-->
+    <record model="ir.actions.act_window" id="vehicle_rental.rent_vehicle_action">
+        <field name="name">Vehicle Rental</field>
+        <field name="res_model">vehicle.rental</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="view_vehicle_rental_search"/>
+        <field name="context">{"search_default_available":1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new rental vehicle
+            </p>
+        </field>
+    </record>
+    <!--    RENT REQUEST ACTION-->
+    <record model="ir.actions.act_window" id="vehicle_rental.rent_request_action">
+        <field name="name">Rent Request</field>
+        <field name="res_model">vehicle.rental.request</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No rent request available now.
+            </p>
+        </field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Vehicle Rental" id="vehicle_rental_menu_root"
+              web_icon="vehicle_rental,static/description/icon.png" action="vehicle_rental.rent_vehicle_action" sequence="-1"/>
+
+    <!-- menu categories -->
+    <menuitem name="Reporting" id="vehicle_rental_report_menu"
+              parent="vehicle_rental_menu_root" sequence="5"/>
+
+    <!-- actions -->
+    <menuitem name="Rent vehicles"
+              id="vehicle_rental.rent_vehicle_action_menu"
+              parent="vehicle_rental_menu_root" action="vehicle_rental.rent_vehicle_action" sequence="1"/>
+
+    <menuitem name="Rent Requests"
+              id="vehicle_rental.rent_request_action_menu"
+              parent="vehicle_rental_menu_root" action="vehicle_rental.rent_request_action" sequence="2"/>
+
+</odoo>
+

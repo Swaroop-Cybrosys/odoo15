@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- category -->
+        <record model="ir.module.category"
+                id="module_category_components_request">
+            <field name="name">Components Request</field>
+            <field name="description">Description for  the Components Request
+                User Groups </field>
+            <field name="sequence">2</field>
+        </record>
+
+        <!-- group 1. requisition Head -->
+        <record id="components_request_head" model="res.groups">
+            <field name="name">Requisition Head</field>
+            <field name="comment">Components Request Head</field>
+            <field name="category_id" ref="module_category_components_request"/>
+        </record>
+
+        <!-- group 2. requisition manager -->
+        <record id="components_request_manager" model="res.groups">
+            <field name="name">Requisition Manager</field>
+            <field name="comment">Components Request Manager.</field>
+            <field name="category_id" ref="module_category_components_request"/>
+        </record>
+
+        <!-- group 3. requisition user -->
+        <record id="components_request_user" model="res.groups">
+            <field name="name">Requisition User</field>
+            <field name="comment">Components Request User</field>
+            <field name="category_id" ref="module_category_components_request"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+<odoo>
+        <record id="action_report_vehicle_report" model="ir.actions.report">
+            <field name="name">Vehicle Rental Report</field>
+            <field name="model">report.vehicle.rental.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">vehicle_rental.report_vehicle_rental</field>
+            <field name="report_file">vehicle_rental.report_vehicle_rental</field>
+            <field name="binding_model_id" ref="model_report_vehicle_rental_wizard"/>
+            <field name="binding_type">report</field>
+        </record>
+
+</odoo>

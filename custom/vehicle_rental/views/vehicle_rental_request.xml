@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- SEARCH VIEW-->
+    <record id="view_vehicle_rental_request_search" model="ir.ui.view">
+        <field name="name">vehicle.rental.request.search</field>
+        <field name="model">vehicle.rental.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="sequence"/>
+                <field name="vehicle_id"/>
+                <field name="rent"/>
+                <!--Group by-->
+                <filter name="group_period_type" string="Period Type" context="{'group_by':'period_type'}"/>
+                <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                <filter name="group_request_date" string="Request Date" context="{'group_by':'request_date'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree view for vehicle.rental.request model  -->
+    <record model="ir.ui.view" id="vehicle_rental_rent_request_tree">
+        <field name="name">vehicle_rental_request tree</field>
+        <field name="model">vehicle.rental.request</field>
+        <field name="arch" type="xml">
+            <tree sample ="1" decoration-danger = "late == True" decoration-warning = "warning == True">
+                <field name="sequence"/>
+                <field name="partner_id" />
+                <field name="request_date"/>
+                <field name="period" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="rent" widget="monetary"/>
+                <field name="to_date"/>
+                <field name="warning" invisible="1"/>
+                <field name="late" invisible="1"/>
+                <field name="state" widget="badge" decoration-muted="state == 'draft'" decoration-warning="state == 'returned'" decoration-success="state == 'confirmed'" decoration-primary="state == 'invoiced_to_request'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Kanban for vehicle.rental.request model-->
+    <record id='vehicle_rental_request_view_kanban' model='ir.ui.view'>
+        <field name="name">vehicle_rental_request.kanban</field>
+        <field name="model">vehicle.rental.request</field>
+        <field name="arch" type="xml">
+            <kanban sample ="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div>
+                                    <strong>
+                                        <field name="sequence" decoration-bf="1" />
+                                    </strong>
+                                    <ul>
+                                        <li>
+                                            Vehicle :
+                                            <field name="vehicle_id"/>
+                                        </li>
+                                        <li>
+                                            Rent Price :
+                                            <field name="rent"/>
+                                        </li>
+                                        <li class="pull-right">
+                                            <field widget="badge" name="state" decoration-muted="state == 'draft'" decoration-warning="state == 'returned'" decoration-success="state == 'confirmed'" decoration-primary="state == 'invoiced_to_request'"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM View for vehicle.rental.request model-->
+    <record id="view_rent_request_form" model="ir.ui.view">
+        <field name="name">rent _request form</field>
+        <field name="model">vehicle.rental.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="confirm_btn" type="object" string="Confirm" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}" groups="vehicle_rental.vehicle_rental_manager"/>
+                    <button name="return_btn" type="object" string="Return" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'invoiced_to_request')]}" />
+                    <button name="create_invoice_btn" type="object" string="Create Invoice" class="oe_highlight" attrs="{'invisible': ['|',('state', 'in', ('draft','invoiced_to_request')),('invoice_count', '>', 0)]}" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,invoiced_to_request,returned" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('state', 'in', ('draft','invoiced_to_request'))]}">
+                            <field name="invoice_count" widget="statinfo" string="Invoices" />
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Paid" attrs="{'invisible': [('state', 'in', ('draft','confirmed','returned'))]}"/>
+                    <group>
+                        <h1>
+                            <field name="sequence"/>
+                        </h1>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1}" options="{&quot;always_reload&quot;: True}"/>
+                            <field name="request_date"/>
+                            <field name="vehicle_id" domain="[('state', '=', 'available')]"/>
+                        </group>
+                        <group>
+                            <field name="from_date"/>
+                            <field name="to_date" />
+                            <field name="period_type"/>
+                            <field name="period"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="rent"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_users"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>
+

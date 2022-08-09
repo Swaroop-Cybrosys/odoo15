@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    FORM View for fleet.vehicle model-->
+    <record id="view_fleet_form_inherit" model="ir.ui.view">
+        <field name="name">fleet.vehicle.inherit</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='car_value']" position="before">
+                <field name="reg_date"/>
+            </xpath>
+            <!-- first_contract_date field inside the
+                    fleet.vehicle form will be hidden-->
+            <xpath expr="//field[@name='first_contract_date']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+
+

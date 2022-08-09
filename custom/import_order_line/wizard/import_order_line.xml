@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_import_order_line_wizard" model="ir.ui.view">
+   <field name="name">Import Order Line Wizard View</field>
+   <field name="model">import.order.line.wizard</field>
+   <field name="type">form</field>
+   <field name="arch" type="xml">
+       <form>
+           <sheet>
+               <group>
+               <field name="import_file"/>
+               </group>
+           </sheet>
+           <footer>
+               <button name="action_import" string="Import" type="object"
+                       class="oe_highlight"/>
+               <button string="Cancel" class="oe_highlight" special="cancel"/>
+           </footer>
+       </form>
+   </field>
+</record>
+</odoo>
+
+
+
